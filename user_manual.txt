@@ -1,0 +1,61 @@
+Purpose:
+The purpose of the api is to retrieve coordinate data automatically, you just need to enter the name you want to search
+─────────────────────────────────────────────
+REQUIRED COLUMNS (USER INPUT)
+─────────────────────────────────────────────
+Column	Description
+name(search):	Original name used for searching (input name)	
+
+─────────────────────────────────────────────
+SYSTEM-GENERATED COLUMNS (AUTO-FILLED)
+─────────────────────────────────────────────
+Column	Description
+timestamp:	Time and date when the record was created or processed
+name1:	First matched result name from search
+name2:	Second matched result name (if available)
+name3:	Third matched result name (if available)
+formatted_address1:	Formatted address of the first matched location
+formatted_address2:	Formatted address of the second matched location
+formatted_address3: Formatted address of the third matched location
+name_valid:	Final validated or chosen name from the results
+lat	Latitude:	Latitude coordinate of the validated location
+lng	Longitude:	Longitude coordinate of the validated location
+data:	Raw JSON response or detailed location data from Google API
+─────────────────────────────────────────────	
+
+Template Example:
++---------------------+--------------------------------------------------+--------------------------+----------------------+----------------------+---------------------------------------------+-------------------------+--------------------------+--------------------------+-------------+-------------+---------------------------------------------------------------------------------------------------------------------+
+| timestamp           | name(search)                                     | name1                    | name2                | name3                | formatted_address1                          | formatted_address2      | formatted_address3       | name_valid               | lat         | lng         | data                                                                                                           	  |
++---------------------+--------------------------------------------------+--------------------------+----------------------+----------------------+---------------------------------------------+-------------------------+--------------------------+--------------------------+-------------+-------------+---------------------------------------------------------------------------------------------------------------------+
+| 17:07:03 05/11/2025 | UBND Phường Ba Đình Thành phố Hà Nội             | UBND Phường Ba Đình      |                      |                      | 77 P. Nguyễn Trường Tộ, Trúc Bạch, Ba Đình  |                         |                          | UBND Phường Ba Đình      | 21.0460938  | 105.8419546 | [{"business_status": "OPERATIONAL", "name": "UBND Phường Ba Đình", "place_id": "ChIJrUo_BVerNTERQTHQTehFdFE"}]      |
++---------------------+--------------------------------------------------+--------------------------+----------------------+----------------------+---------------------------------------------+-------------------------+--------------------------+--------------------------+-------------+-------------+---------------------------------------------------------------------------------------------------------------------+
+
+─────────────────────────────────────────────	
+API Endpoints
+
+| Method | Endpoint          | Description                                                                   |
+| ------ | ----------------- | ----------------------------------------------------------------------------- |
+| `POST` | `/process_sheet/` | Retrieve coordinates automatically from Google Maps API and update the sheet. |
+| `PUT`  | `/process_sheet/` | Update coordinates again if the validated name (`name_valid`) has changed.    |
+
+
+Request body (JSON):
+{
+  "sheet_url": "https://docs.google.com/spreadsheets/d/xxxxx/",
+  "worksheet_name": "Sheet1" ->> (Option)
+}
+
+How to run app:
+
+uvicorn <name_file>:app --host 0.0.0.0 --port 8000
+
+http://127.0.0.1:8000/docs
+
+─────────────────────────────────────────────	
+***Important:
+
+The Google Sheet must have sharing permission “Anyone with the link → Editor” and add mail editor ""sheet-writer@ee-prolinh5465.iam.gserviceaccount.com""
+
+Google Places API key (API_KEY) must be active and valid.
+
+Do not rename columns — they must match exactly as listed above.
